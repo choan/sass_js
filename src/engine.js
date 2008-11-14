@@ -49,7 +49,9 @@ var sepp = Sass.Engine.prototype;
 
 
 sepp.render = function() {
-  return renderToTree.call(this).toString(); // TODO ETC  
+  var tree = renderToTree.call(this);
+  // TODO implement environment
+  return tree.toString();
 };
 
 function renderToTree() {
@@ -73,12 +75,10 @@ function tabulate(input) {
   var ret = [];
   var i, j, line, lineTabStr, tabStr, lineTabs;
   input = input.split(/\r|\n|\r\n/);
-  // debugger;
   for (i = 0; i < input.length; i += 1) {
     j = i + 1;
     line = input[i];
     if (line.search(/^\s*$/) != -1) continue;
-    // debugger;
     lineTabStr = line.match(/^\s*/);
     lineTabStr = lineTabStr && lineTabStr[0];
     if (lineTabStr.length !== 0) {
@@ -91,7 +91,6 @@ function tabulate(input) {
       ret.push(new Line(line, 0, j));
       continue;
     }
-    // debugger;
     lineTabs = lineTabStr.length / tabStr.length;
     
     // TODO controlar nivel de sangrado
@@ -106,7 +105,6 @@ function tree(arr, i) {
   var nodes = [];
   var line;
   var subt;
-  // debugger;
   while ((line = arr[i]) && line.tabs >= base) {
     if (line.tabs > base) {
       if (line.tabs > base + 1) {
@@ -150,6 +148,13 @@ function appendChildren(parent, children, root) {
     child = buildTree(parent, line, root);
     if (Sass.utils.isA(child, Sass.tree.RuleNode) && child.isContinued()) {
       // TODO continued selectors
+      if (continuedRule) {
+        continuedRule.addRules(child);
+      }
+      else {
+        continuedRule = child;
+      }
+      continue;
     }
     if (continuedRule) {
       // TODO raise if ends in comma and is not a RuleNode
@@ -157,7 +162,7 @@ function appendChildren(parent, children, root) {
       continuedRule.children = child.children;
       temp = continuedRule;
       continuedRule = null;
-      child = continuedRule;
+      child = temp;
     }
     validateAndAppendChild(parent, child, line, root);
   }
@@ -165,7 +170,6 @@ function appendChildren(parent, children, root) {
 }
 
 function validateAndAppendChild(parent, child, line, root) {
-  // debugger;
   var i;
   if (!root) {
     // TODO raise if child is a mixin or an import directive
@@ -207,7 +211,7 @@ function parseAttribute(line, regex) {
   eq   = m[2];
   value = m[3];
 
-  if (!name || !value) {
+  if (!name || value === undefined) {
     throw Sass.exception.SyntaxError('Invalid attribute: "' + line + '".', this.line);
   }
   

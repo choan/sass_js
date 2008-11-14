@@ -12,7 +12,7 @@
     var Sass = {};
     Sass.tree = {};
   </script>
-  <script src="../../src/errors.js" type="text/javascript"></script>
+  <script src="../../src/exception.js" type="text/javascript"></script>
   <script src="../../src/script.js" type="text/javascript"></script>
   <script src="../../src/engine.js" type="text/javascript"></script>
   <script src="../../src/utils.js" type="text/javascript"></script>
@@ -56,8 +56,12 @@ context("The Sass Engine",
     var eng = new Sass.Engine('selector\n  :attribute value\n  :other babe\n#other-selector\n  :this is\n  :going great');
     this.assertEqual('selector { attribute: value; other: babe; }\n#other-selector { this: is; going: great; }\n', eng.render());
   }),
-  should("render combined selector and attribute rules", function() {
-    var eng = new Sass.Engine('selector,\ncomplex\n  :attribute value');
+  should("render combined selectors", function() {
+    var eng = new Sass.Engine('selector, complex\n  :attribute value');
+    this.assertEqual('selector, complex { attribute: value; }\n', eng.render());
+  }),
+  should("render combined selectors from different lines", function() {
+    var eng = new Sass.Engine('selector, \ncomplex\n  :attribute value');
     this.assertEqual('selector, complex { attribute: value; }\n', eng.render());
   }),
   should("render nested selectors", function() {

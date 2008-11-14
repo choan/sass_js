@@ -3,11 +3,9 @@ Sass.utils = {
   scan : function(s, regexp, cb) {
     var ret, match;
     
-    // debugger;
     if (!cb) {
       ret = [];
       cb = function(a) {
-        // console.log(a, typeof a, a.constructor);
         ret.push(a);
       };
     }
@@ -63,8 +61,5 @@ Sass.utils = {
     }
     return false;
   }
-  
-  
-  
-  
+    
 };

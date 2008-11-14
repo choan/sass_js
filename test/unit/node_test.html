@@ -59,7 +59,7 @@ context("A Sass.tree.Node", {
     this.assertEqual('some other text', this.node[1]);  
   }),
   should("transform to string", function() {
-    this.node.append('#expected');
+    this.node.append('#expected\n');
     this.assertEqual('#expected\n', this.node.toString());
   })
 )();

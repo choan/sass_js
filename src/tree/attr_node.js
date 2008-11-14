@@ -18,8 +18,7 @@ stapp.isInvalidChild = function(child) {
 
 stapp.toString = function(tabs, parentName) {
   // TODO raise if this.value ends with ;
-  // debugger;
-  var realName = this.name, joinString, spaces, toReturn, i;
+  var realName = this.name, joinString, spaces, toReturn, i, kid;
   if (parentName) {
     realName = parentName + '-' + realName;
   }

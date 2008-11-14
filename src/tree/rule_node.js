@@ -16,8 +16,9 @@ strpp.isContinued = function() {
 };
 
 strpp.addRules = function(node) {
-  this.rule = this.rule.constructor == Array ? this.rule : [ this.rule ];
-  this.rule.push(node.rules);
+  this.rule = this.rules();
+  var addition = node.rules();
+  this.rule = this.rule.concat(addition);
 };
 
 strpp.rules = function() {
@@ -25,10 +26,9 @@ strpp.rules = function() {
 };
 
 strpp.toString = function(tabs, superRules) {
-  debugger;
   var attrs = [];
   var subRules = [];
-  var ruleSplitter = /\s*,\s*/;
+  var ruleSplitter = /\s*,\s*/g;
   var ruleSeparator = ', ';
   var lineSeparator = '\n';
   var ruleIndent = Sass.utils.repeat('  ', tabs - 1);
@@ -36,10 +36,10 @@ strpp.toString = function(tabs, superRules) {
   var perRuleIndent;
   var totalIndent;
   var toReturn = '';
-  var i, child;
+  var i, child, selectors;
   if (superRules) {
     // TODO implement multiple parent rules
-    totalRule =  [ superRules[0] + ' ' + this.rules() ];
+    totalRule =  [ superRules + ' ' + this.rules() ];
   }
   else if (false) { // TODO raise syntax error if any of the rules contains the & call
   }
@@ -47,7 +47,11 @@ strpp.toString = function(tabs, superRules) {
     // TODO implement clean joining of selectors
     perRuleIndent = ruleIndent;
     totalIndent = '';
-    totalRule = this.rules();
+    selectors = this.rules();
+    for (i = 0; i < selectors.length; i += 1) {
+      selectors[i] = selectors[i].replace(/,$/, '').replace(ruleSplitter, ruleSeparator).replace(/\s*$/, '');
+    }
+    totalRule = selectors.join(ruleSeparator);
   }
   
   for (i = 0; i < this.children.length; i += 1) {
@@ -64,7 +68,7 @@ strpp.toString = function(tabs, superRules) {
     for (i = 0; i < attrs.length; i += 1) { // convert each attribute to a string
       attrs[i] = attrs[i].toString(tabs + 1);
     }
-    toReturn += totalRule.join(', ') + ' { ' + attrs.join('') + '}\n';
+    toReturn += totalRule + ' { ' + attrs.join('') + '}\n';
   }
 
   for (i = 0; i < subRules.length; i += 1) {

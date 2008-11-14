@@ -1,13 +1,5 @@
-Sass Js
+# Sass Js
 
-Description:
-    This JavaScript project ...
+Sass Js is a (under development) port of the Ruby Sass parser to JavaScript.
 
-Example:
-    ...
-
-More information:
-    http://NOTE-ENTER-URL.com
-    
-Author:
-    FIXME full name, FIXME email
+Implementation is currently very incomplete. At the moment, Sass Js parses only selectors and attributes.

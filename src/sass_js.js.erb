@@ -1,12 +1,33 @@
 <%= include 'HEADER' %>
 
 var Sass = {
-  Version: '<%= APP_VERSION %>',
+  version: '<%= APP_VERSION %>',
+  tree: {}
 };
 
+(function() { // Sass.exception closure
+<%= include "exception.js" %>
+})();
+
+(function() { // Sass.Script closure
+<%= include "script.js" %>
+})(); // end Sass.Script.closure
 
 (function() { // Sass.Engine closure
-
 <%= include 'engine.js' %>
-
 })(); // end Sass.Engine closure
+
+<%= include "utils.js" %>
+
+(function() { // Sass.tree.Node closure
+<%= include "tree/node.js" %>
+})(); // end Sass.tree.Node closure
+
+(function() { // Sass.tree.RuleNode closure
+<%= include "tree/rule_node.js" %>
+})(); // end Sass.tree.RuleNode closure
+
+(function() { // Sass.tree.AttrNode closure
+<%= include "tree/attr_node.js" %>
+})(); // end Sass.tree.AttrNode closure
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>JavaScript unit test file</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/jsunittest.js" type="text/javascript"></script>
+  
+  <script src="../assets/jshoulda.js" type="text/javascript"></script>
+  
+  <script type="text/javascript" charset="utf-8">
+    var Sass = {};
+    Sass.tree = {};
+  </script>
+  <script src="../../src/errors.js" type="text/javascript"></script>
+  <script src="../../src/script.js" type="text/javascript"></script>
+  <script src="../../src/engine.js" type="text/javascript"></script>
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/tree/node.js" type="text/javascript"></script>
+  <script src="../../src/tree/rule_node.js" type="text/javascript"></script>
+  <script src="../../src/tree/attr_node.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests <strong>engine.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output (one per Runner, via {testLog: "testlog"} option)-->
+  <div id="testlog"></div>
+  
+  <!-- Put sample/test html here -->
+  <div id="sample"></div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+
+context("The Sass Engine", 
+  should("render simple selector and attribute rules", function() {
+    var eng = new Sass.Engine('selector\n  :attribute value');
+    this.assertEqual('selector { attribute: value; }\n', eng.render());
+  }),
+  should("render simple selector and multiple attribute rules", function() {
+    var eng = new Sass.Engine('selector\n  :attribute value\n  :other babe');
+    this.assertEqual('selector { attribute: value; other: babe; }\n', eng.render());
+  }),
+  should("render multiple selector and attribute rules", function() {
+    var eng = new Sass.Engine('selector\n  :attribute value\n  :other babe\n#other-selector\n  :this is\n  :going great');
+    this.assertEqual('selector { attribute: value; other: babe; }\n#other-selector { this: is; going: great; }\n', eng.render());
+  }),
+  should("render combined selector and attribute rules", function() {
+    var eng = new Sass.Engine('selector,\ncomplex\n  :attribute value');
+    this.assertEqual('selector, complex { attribute: value; }\n', eng.render());
+  }),
+  should("render nested selectors", function() {
+    var eng = new Sass.Engine('parent\n  child\n    :attr value');
+    this.assertEqual('parent child { attr: value; }\n', eng.render());
+  })
+)();
+
+// ]]>
+</script>
+</body>
+</html>

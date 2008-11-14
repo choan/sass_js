@@ -1,0 +1,12 @@
+<%= include 'HEADER' %>
+
+var Sass = {
+  Version: '<%= APP_VERSION %>',
+};
+
+
+(function() { // Sass.Engine closure
+
+<%= include 'engine.js' %>
+
+})(); // end Sass.Engine closure

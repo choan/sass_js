@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>JavaScript unit test file</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/jsunittest.js" type="text/javascript"></script>
+  
+  <script src="../assets/jshoulda.js" type="text/javascript"></script>
+  <script type="text/javascript" charset="utf-8">
+    var Sass = {};
+    Sass.tree = {};
+  </script>
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/script.js" type="text/javascript"></script>
+  <script src="../../src/engine.js" type="text/javascript"></script>
+  <script src="../../src/tree/node.js" type="text/javascript"></script>
+  <script src="../../src/tree/rule_node.js" type="text/javascript"></script>
+  <script src="../../src/tree/attr_node.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests <strong>parse.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output (one per Runner, via {testLog: "testlog"} option)-->
+  <div id="testlog"></div>
+  
+  <!-- Put sample/test html here -->
+  <div id="sample"></div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+
+context("parsers:", {
+  setup: function() {
+    this.engine = new Sass.Engine();
+  }
+  },
+  context("parseLine",
+    should("recognize attributes", function() {
+      var attr = parseLine.call(this.engine, null, new Line(':abc de', 0, 0));
+      console.log(attr);
+      this.assertEqual(true, attr instanceof Sass.tree.AttrNode);
+    }),
+    should('discard variable declaration lines', function() {
+      var attr = parseLine.call(this.engine, null, new Line('!variable = yeah', 0, 0));
+      this.assertUndefined(attr);
+    }),
+    should("discard comment lines", function() {
+      var comm = parseLine.call(this.engine, null, new Line('/!variable = yeah', 0, 0));
+      this.assertUndefined(comm);
+    }),
+    should("discard directive lines", function() {
+      var dir = parseLine.call(this.engine, null, new Line('@import tralala.sass', 0, 0));
+      this.assertUndefined(dir);
+    }),
+    should("discard mixin definitions", function() {
+      var mixin = parseLine.call(this.engine, null, new Line('=mixin', 0, 0));
+      this.assertUndefined(mixin);
+    }),
+    should("discard mixin includes", function() {
+      var mixin = parseLine.call(this.engine, null, new Line('+mixin', 0, 0));
+      this.assertUndefined(mixin);
+    }),
+    should("recognize selectors", function() {
+      var selector = parseLine.call(this.engine, null, new Line('my #selector', 0, 0));
+      this.assertEqual(true, selector instanceof Sass.tree.RuleNode, 'Should be equal');
+    })
+    
+  ),
+  context("attribute",
+    should("run tests", function() {
+      var attr = parseAttribute.call(this.engine, ':abc de');
+      this.assertEqual('abc', attr.name);
+      this.assertEqual('de', attr.value);
+    })
+  )
+)();
+
+// ]]>
+</script>
+</body>
+</html>

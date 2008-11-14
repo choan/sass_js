@@ -1,5 +1,5 @@
 # Sass Js
 
-Sass Js is a (under development) port of the Ruby Sass parser to JavaScript.
+Sass Js is a (experimental and under development) port of the Ruby Sass parser to JavaScript.
 
 Implementation is currently very incomplete. At the moment, Sass Js parses only selectors and attributes.
